@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema version="1.0" targetNamespace="http://fault.service.security.ws" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://service.security.ws">
+
+  <xs:import namespace="http://service.security.ws" schemaLocation="WsSecurityServiceImpl_schema1.xsd"/>
+
+  <xs:element name="WebServiceException" type="ns1:WebServiceException"/>
+
+</xs:schema>
+

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>ws.security</groupId>
+    <artifactId>ws-security-server</artifactId>
+    <name>ws-security SERVER -JAR-</name>
+    <packaging>jar</packaging>
+    <version>1.0.0</version>
+
+    <properties>
+        <gen.wsdl.dir>${project.build.directory}/generated-sources/wsdl</gen.wsdl.dir>
+        <org.slf4j-version>1.6.6</org.slf4j-version>
+        <ch.qos.logback-version>1.0.6</ch.qos.logback-version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <spring.version>3.1.1.RELEASE</spring.version>
+        <hibernate.general.version>3.6.10.Final</hibernate.general.version>
+        <hibernate.validator.version>4.2.0.Final</hibernate.validator.version>
+    </properties>
+
+    <dependencies>
+        <!--logs-->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-ext</artifactId>
+            <version>${org.slf4j-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${ch.qos.logback-version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
+            <version>${ch.qos.logback-version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                    <encoding>UTF-8</encoding>
+                    <maxmem>1024</maxmem>
+                    <meminitial>256</meminitial>
+                </configuration>
+                <version>2.3.2</version>
+                <executions>
+                    <execution>
+                        <id>compile</id>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                        <phase>compile</phase>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <!--<groupId>org.codehaus.mojo</groupId>-->
+                <groupId>org.jvnet.jax-ws-commons</groupId>
+                <artifactId>jaxws-maven-plugin</artifactId>
+                <version>2.3</version>
+                <executions>
+                    <execution>
+                        <id>ws-security-server wsgen</id>
+                        <goals>
+                            <goal>wsgen</goal>
+                        </goals>
+                        <phase>process-classes</phase>
+                        <configuration>
+                            <resourceDestDir>${gen.wsdl.dir}</resourceDestDir>
+                            <sei>ws.security.service.WsSecurityServiceImpl</sei>
+                            <genWsdl>true</genWsdl>
+                            <keep>false</keep>
+                            <!--<verbose>true</verbose>-->
+                            <!--<extension>true</extension>-->
+                            <!--<protocol>Xsoap1.2</protocol>-->
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy wsdl</id>
+                        <phase>process-classes</phase>
+                        <configuration>
+                            <tasks>
+                                <copy todir="${basedir}/../Client/src/main/external_services/wsdl/" flatten="true" overwrite="true" verbose="true"
+                                      failonerror="false">
+                                    <fileset dir="${gen.wsdl.dir}" includes="WsSecurityServiceImpl.wsdl"/>
+                                    <fileset dir="${gen.wsdl.dir}" includes="WsSecurityServiceImpl*.xsd"/>
+                                </copy>
+                            </tasks>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

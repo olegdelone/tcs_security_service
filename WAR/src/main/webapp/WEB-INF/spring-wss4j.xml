@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!--<bean id="addPersonEndpoint" class="ws.security.service.endpoint.TestAuthSecurityEndpoint" autowire="byName"/>-->
+
+    <!--<bean class="org.springframework.ws.server.endpoint.mapping.PayloadRootQNameEndpointMapping">-->
+        <!--<property name="interceptors">-->
+            <!--<list>-->
+                <!--<ref local="wsServerSecurityInterceptor"/>-->
+            <!--</list>-->
+        <!--</property>-->
+        <!--<property name="mappings">-->
+            <!--<props>-->
+                <!--<prop key="{http://service.security.ws}testAuth">addPersonEndpoint</prop>-->
+            <!--</props>-->
+        <!--</property>-->
+    <!--</bean>-->
+
+    <bean id="wsServerSecurityInterceptor" class="org.springframework.ws.soap.security.wss4j.Wss4jSecurityInterceptor">
+        <!-- Validation part -->
+        <property name="validationActions" value="UsernameToken"/>
+        <property name="validationCallbackHandler">
+            <bean id="callbackHandler"
+                  class="org.springframework.ws.soap.security.wss4j.callback.SimplePasswordValidationCallbackHandler">
+                <property name="users">
+                    <props>
+                        <prop key="Bert">Ernie</prop>
+                    </props>
+                </property>
+            </bean>
+        </property>
+        <property name="securementCallbackHandler">
+            <bean id="callbackHandler"
+                  class="org.springframework.ws.soap.security.wss4j.callback.SimplePasswordValidationCallbackHandler">
+                <property name="users">
+                    <props>
+                        <prop key="Bert">Ernie</prop>
+                        <prop key="Mickey">Mouse</prop>
+                    </props>
+                </property>
+            </bean>
+        </property>
+        <property name="securementActions" value="UsernameToken"/>
+        <property name="securementUsername" value="Ernie"/>
+        <property name="securementPassword" value="Bert"/>
+    </bean>
+
+</beans>
